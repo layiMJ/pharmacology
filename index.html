@@ -200,14 +200,25 @@ button:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:2px solid 
 /* Lined progress panel */
 .progress-panel{
   margin:22px 0 10px;background:var(--paper);border:1px solid var(--rule-strong);
-  border-radius:var(--radius-m);padding:16px 16px 14px;
+  border-radius:var(--radius-m);padding:4px 16px 14px;
   box-shadow:var(--shadow-page);
+  background-image:repeating-linear-gradient(
+    transparent, transparent 27px,
+    var(--rule) 27px, var(--rule) 28px
+  );
+  background-position:0 4px;
 }
-.progress-panel-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:12px;flex-wrap:wrap}
-.progress-panel-head h3{font-size:14px;font-weight:700;color:var(--ink);margin:0;letter-spacing:.04em;text-transform:uppercase}
-.progress-panel-head .pct{font-family:var(--mono);font-size:22px;font-weight:700;color:var(--accent)}
+.resume-card{margin:18px 0 0;background:var(--paper);border:1px solid var(--rule-strong);border-left:4px solid var(--accent);border-radius:var(--radius-m);padding:14px 16px;box-shadow:var(--shadow-page)}
+.resume-card h3{font-size:12px;font-weight:700;margin:0 0 6px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.resume-title{font-size:16px;font-weight:700;color:var(--ink);margin:0}
+.resume-meta{font-size:13px;color:var(--ink-soft);margin:4px 0 12px;line-height:1.5}
+.resume-actions{display:flex;gap:8px;flex-wrap:wrap}
+.resume-actions .btn{flex:1;min-width:120px}
+.progress-panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;height:28px;margin:0;flex-wrap:nowrap}
+.progress-panel-head h3{line-height:28px;font-size:14px;font-weight:700;color:var(--ink);margin:0;letter-spacing:.04em;text-transform:uppercase}
+.progress-panel-head .pct{line-height:28px;font-family:var(--mono);font-size:22px;font-weight:700;color:var(--accent)}
 .progress-bar-track{
-  height:10px;border-radius:1px;background:var(--line-soft);overflow:hidden;
+  height:10px;margin:9px 0;border-radius:1px;background:var(--line-soft);overflow:hidden;
   border:1px solid var(--rule-strong);
 }
 .progress-bar-fill{
@@ -215,13 +226,13 @@ button:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:2px solid 
   transition:width .4s ease;min-width:0;
 }
 .progress-meta{
-  display:flex;justify-content:space-between;gap:10px;margin-top:10px;flex-wrap:wrap;
+  display:flex;justify-content:space-between;align-items:center;gap:0 10px;margin:0;line-height:28px;flex-wrap:wrap;
   font-size:12.5px;color:var(--ink-faint);
 }
 .progress-meta b{color:var(--ink-soft);font-weight:600}
-.progress-empty{font-size:13.5px;color:var(--ink-soft);margin:0;font-style:italic}
-.progress-topics{margin-top:14px;display:flex;flex-direction:column;gap:8px}
-.progress-topic{display:flex;align-items:center;gap:10px}
+.progress-empty{font-size:13.5px;line-height:28px;color:var(--ink-soft);margin:0;font-style:italic}
+.progress-topics{margin-top:0;display:flex;flex-direction:column;gap:0}
+.progress-topic{display:flex;align-items:center;gap:10px;height:28px}
 .progress-topic .pt-name{flex:0 0 110px;font-size:12px;color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .progress-topic .pt-bar{flex:1;height:6px;background:var(--line-soft);border-radius:1px;overflow:hidden;border:1px solid var(--rule)}
 .progress-topic .pt-bar > i{display:block;height:100%;border-radius:0}
@@ -343,14 +354,19 @@ h2.section-title::after{content:"";flex:1;height:1px;background:var(--rule-stron
 .qstem-box{
   background:var(--paper);border:1px solid var(--rule-strong);border-radius:var(--radius-m);
   padding:20px 18px 12px;box-shadow:var(--shadow-page);
-  padding-left:18px;
+  /* ruled paper lines */
+  background-image:
+    linear-gradient(90deg, transparent 0, transparent 28px, var(--margin-red) 28px, var(--margin-red) 29px, transparent 29px),
+    repeating-linear-gradient(transparent, transparent 27px, var(--rule) 27px, var(--rule) 28px);
+  background-position:0 0, 0 8px;
+  padding-left:40px;
 }
 .qsvg{margin:0 0 14px;display:block;width:100%;height:auto;background:var(--paper-edge);border:1px solid var(--rule);border-radius:2px;padding:8px 6px 4px}
 .qsvg-wrap{margin:0 0 14px;background:var(--paper-edge);border:1px solid var(--rule);border-radius:2px;padding:10px 8px 6px}
 .qsvg-wrap .qsvg{margin:0;border:none;padding:0;background:transparent}
 .qsvg-cap{font-size:12px;color:var(--ink-faint);text-align:center;margin-top:2px;padding:0 8px 4px}
-.qstem{font-size:16.5px;line-height:1.55;color:var(--ink)}
-.qsrc{margin-top:12px;font-family:var(--mono);font-size:10.5px;color:var(--ink-faint);letter-spacing:.02em}
+.qstem{font-size:16.5px;line-height:28px;margin:0;color:var(--ink)}
+.qsrc{background:var(--paper);padding:2px 0;margin-top:12px;font-family:var(--mono);font-size:10.5px;color:var(--ink-faint);letter-spacing:.02em}
 
 .options{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
 .opt{
@@ -406,7 +422,7 @@ h2.section-title::after{content:"";flex:1;height:1px;background:var(--rule-stron
 }
 .k-badge{background:var(--accent-tint);color:var(--accent);border-color:var(--accent)}
 
-.qflag-row{display:flex;justify-content:flex-end;padding:10px 2px 0}
+.qflag-row{display:flex;justify-content:flex-end;padding:10px 2px 0;background:var(--paper)}
 .flag-btn{background:none;border:1px dashed var(--rule-strong);border-radius:2px;padding:4px 11px;font-size:12px;color:var(--ink-soft)}
 .flag-btn[aria-pressed="true"]{background:var(--accent-tint);border-style:solid;border-color:var(--accent);color:var(--accent)}
 
@@ -464,8 +480,9 @@ h2.section-title::after{content:"";flex:1;height:1px;background:var(--rule-stron
 .note{background:var(--primary-tint);border-radius:2px;padding:10px 12px;font-size:13.5px;color:var(--ink);line-height:1.55;border-left:3px solid var(--primary);border:1px solid var(--rule);border-left-width:3px}
 .rev-src{margin-top:7px;font-family:var(--mono);font-size:10.5px;color:var(--ink-faint)}
 
-.qtable{width:100%;border-collapse:collapse;margin:4px 0 14px;font-size:13px;border-radius:2px;overflow:hidden}
-.qtable caption{caption-side:bottom;font-size:11.5px;color:var(--ink-faint);padding-top:6px;text-align:left}
+.qtable{width:100%;border-collapse:collapse;margin:4px 0 14px;font-size:13px;border-radius:2px;overflow:hidden;background:var(--paper)}
+.qtable caption{background:var(--paper);caption-side:bottom;font-size:11.5px;color:var(--ink-faint);padding-top:6px;text-align:left}
+.qtable td{background:var(--paper)}
 .qtable th,.qtable td{border:1px solid var(--rule-strong);padding:7px 9px;text-align:left;vertical-align:middle}
 .qtable th{background:var(--line-soft);font-size:11px;color:var(--ink-soft);font-weight:700;letter-spacing:.03em}
 .qtable td.mono{font-family:var(--mono);text-align:center;white-space:nowrap}
@@ -1812,7 +1829,14 @@ function prep(q){
   const base = q.base || q;
   if(!base.shuf) return base;
   const perm = shuffle(base.o.map((_,i)=>i));
-  return Object.assign({}, base, {o:perm.map(i=>base.o[i]), a:perm.indexOf(base.a), base:base});
+  return Object.assign({}, base, {o:perm.map(i=>base.o[i]), a:perm.indexOf(base.a), base:base, perm:perm});
+}
+/* Rebuild a question with a saved option order (used when resuming) */
+function prepWith(base, perm){
+  if(!base.shuf) return base;
+  const ok = Array.isArray(perm) && perm.length===base.o.length && perm.slice().sort((x,y)=>x-y).every((v,i)=>v===i);
+  if(!ok) return prep(base);
+  return Object.assign({}, base, {o:perm.map(i=>base.o[i]), a:perm.indexOf(base.a), base:base, perm:perm});
 }
 function dedupe(list){
   const seen = {}, out = [];
@@ -2255,7 +2279,7 @@ function homeProgressHtml(){
     return '<div class="progress-panel">'+
       '<div class="progress-panel-head"><h3>Your progress</h3><span class="pct">—</span></div>'+
       '<div class="progress-bar-track"><div class="progress-bar-fill" style="width:0%"></div></div>'+
-      '<p class="progress-empty" style="margin-top:10px">No sessions yet. Start a topic, build your own session or take the mock exam — your accuracy will show up here.</p>'+
+      '<p class="progress-empty">No sessions yet. Start a topic, build your own session or take the mock exam — your accuracy will show up here.</p>'+
     '</div>';
   }
   let head, meta;
@@ -2405,6 +2429,7 @@ function renderHome(){
     '<div class="hero">'+
       '<div class="hero-badge">CLI 414 · Weeks 1–8</div><h1>Revision question bank for the first in-course examination</h1>'+
       '<p class="lede">Covers Weeks 1–8 of CLI 414 — general principles, pharmacokinetics, dosage regimens, pharmacodynamics, autonomic pharmacology and autacoids — from a '+leCount+'-question topic bank, your past-question bank, Katzung & Trevor, and Babbini & Thomas <em>Pharmacology Test Prep</em>. Tap an answer and the correct choice plus explanation appear immediately (or switch to exam mode below).</p>'+
+      resumeCardHtml()+
       homeProgressHtml()+
     '</div>'+
     '<div class="stat-row">'+
@@ -2467,11 +2492,93 @@ function renderHome(){
   });
   const pb = document.getElementById("progressBtn");
   if(pb) pb.addEventListener("click", ()=>{ nav.push("progress"); setView("progress"); });
+  const rb = document.getElementById("resumeBtn");
+  if(rb) rb.addEventListener("click", resumeSession);
+  const db = document.getElementById("discardBtn");
+  if(db) db.addEventListener("click", discardResume);
   bindBuilder();
+}
+
+/* ---------- Resume support ----------
+   pharmQuizResume : the one unfinished session, saved as it goes
+   {v,catKey,title,color,partial,items:[[key,perm|null]],idx,answers,flags,elapsed,timeLeft,totalTime,pace,instant,savedAt} */
+const RESUME_KEY = "pharmQuizResume";
+function saveResume(){
+  const s = state.session;
+  if(!s || state.view!=="quiz") return;
+  const touched = Object.keys(state.answers).length>0 || state.idx>0 || Object.keys(state.flags).some(k=>state.flags[k]);
+  if(!touched) return;
+  lsSet(RESUME_KEY, {
+    v:1, catKey:s.catKey, title:s.title, color:s.color, partial:!!s.partial,
+    items:s.list.map(q=>[q.key, q.perm||null]),
+    idx:state.idx, answers:state.answers, flags:state.flags,
+    elapsed:state.elapsed, timeLeft:state.timeLeft, totalTime:state.totalTime,
+    pace:state.pace, instant:state.instant, savedAt:Date.now()
+  });
+}
+function clearResume(){ try{ localStorage.removeItem(RESUME_KEY); }catch(e){} }
+function loadResume(){
+  const r = lsGet(RESUME_KEY, null);
+  if(!r || r.v!==1 || !Array.isArray(r.items)) return null;
+  const byKey = {};
+  ALL.forEach(q=>{ byKey[q.key] = q; });
+  const list = [];
+  r.items.forEach(it=>{
+    const base = byKey[it[0]];
+    if(base) list.push(prepWith(base, it[1]));
+  });
+  if(!list.length) return null;
+  const ids = {};
+  list.forEach(q=>{ ids[q.id] = 1; });
+  const answers = {}, flags = {};
+  Object.keys(r.answers||{}).forEach(id=>{ if(ids[id]) answers[id] = r.answers[id]; });
+  Object.keys(r.flags||{}).forEach(id=>{ if(ids[id] && r.flags[id]) flags[id] = true; });
+  return {r:r, list:list, answers:answers, flags:flags};
+}
+function resumeSession(){
+  const d = loadResume();
+  if(!d){ clearResume(); render(); return; }
+  const r = d.r;
+  state.session = {catKey:r.catKey, list:d.list, title:r.title, color:r.color, partial:!!r.partial};
+  state.pace = (r.pace===null || typeof r.pace==="number") ? r.pace : state.pace;
+  state.instant = typeof r.instant==="boolean" ? r.instant : state.instant;
+  state.idx = Math.min(Math.max(0, r.idx|0), d.list.length-1);
+  state.answers = d.answers;
+  state.flags = d.flags;
+  state.paletteOpen = false;
+  state.elapsed = r.elapsed|0;
+  state.totalTime = state.pace ? (r.totalTime || state.pace*d.list.length) : 0;
+  state.timeLeft = state.pace ? Math.max(1, r.timeLeft|0) : 0;
+  state.leaving = false;
+  nav.push("quiz");
+  state.view = "quiz";
+  render();
+  window.scrollTo(0,0);
+  startTimer();
+}
+function discardResume(){
+  if(!confirm("Discard your unfinished session? This cannot be undone.")) return;
+  clearResume();
+  render();
+}
+function resumeCardHtml(){
+  const d = loadResume();
+  if(!d) return "";
+  const r = d.r, total = d.list.length, done = Object.keys(d.answers).length;
+  const left = r.pace ? " · "+fmtTime(Math.max(0, r.timeLeft|0))+" left" : "";
+  return '<div class="resume-card">'+
+    '<h3>Unfinished session</h3>'+
+    '<p class="resume-title">'+esc(r.title)+'</p>'+
+    '<p class="resume-meta">Question '+(Math.min(Math.max(0, r.idx|0), total-1)+1)+' of '+total+' · '+done+' answered'+left+' · saved '+esc(fmtWhen(r.savedAt))+'</p>'+
+    '<div class="resume-actions"><button type="button" class="btn" id="resumeBtn">Resume session</button>'+
+    '<button type="button" class="btn ghost" id="discardBtn">Discard</button></div>'+
+  '</div>';
 }
 
 /* ---------- Starting sessions ---------- */
 function startList(list, meta, replace){
+  if(lsGet(RESUME_KEY, null) && !confirm("You have an unfinished session saved. Starting a new one will replace it. Continue?")) return;
+  clearResume();
   state.session = {catKey:meta.catKey, list:list, title:meta.title, color:meta.color, partial:!!meta.partial};
   state.idx = 0;
   state.answers = {};
@@ -2550,6 +2657,7 @@ function startTimer(){
       }
     }
     updateTimerDom();
+    if(state.elapsed % 5 === 0) saveResume();
   }, 1000);
 }
 
@@ -2573,6 +2681,17 @@ function updateTimerDom(){
     barWrap.className = "bar time-bar";
   }
 }
+
+/* Ruled lines repeat every 28px; shift them so each line of the stem sits in the gap between two lines. */
+function alignRuling(){
+  const box = document.querySelector(".qstem-box"), st = document.querySelector(".qstem");
+  if(!box || !st) return;
+  const top = st.getBoundingClientRect().top - box.getBoundingClientRect().top - box.clientTop;
+  const off = ((Math.round(top) % 28) + 28) % 28;
+  box.style.backgroundPosition = "0 0, 0 " + off + "px";
+}
+window.addEventListener("resize", alignRuling);
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(alignRuling);
 
 /* ---------- Quiz ---------- */
 function renderQuiz(){
@@ -2650,6 +2769,8 @@ function renderQuiz(){
     '<button class="btn" id="nextBtn">'+nextLabel+'</button>'+
   '</div></div>';
 
+  saveResume();
+  alignRuling();
   document.getElementById("exitBtn").addEventListener("click", exitSession);
   document.getElementById("paletteToggle").addEventListener("click", ()=>{ state.paletteOpen = !state.paletteOpen; render(); });
   document.querySelectorAll("[data-jump]").forEach(b=>{
@@ -2688,12 +2809,13 @@ function renderQuiz(){
 }
 
 function leaveQuizCleanup(){
+  saveResume();
   clearInterval(state.timerHandle);
   state.session = null;
 }
 function exitSession(){
   const touched = Object.keys(state.answers).length>0 || Object.keys(state.flags).some(k=>state.flags[k]);
-  if(touched && !confirm("Exit this session? Your progress in this attempt will be lost.")) return;
+  if(touched && !confirm("Exit this session? It will be saved so you can resume it from the home screen.")) return;
   if(nav.i>0 && history.state && history.state.v==="quiz"){
     state.leaving = true;      // the popstate handler finishes the job
     history.back();
@@ -2707,6 +2829,7 @@ function finishSession(){
   clearInterval(state.timerHandle);
   const s = state.session;
   if(!s) return;
+  clearResume();
   let correct = 0, wrong = 0, blank = 0;
   const perCat = {};
   s.list.forEach(q=>{
@@ -2985,6 +3108,7 @@ function renderProgress(){
   document.getElementById("resetBtn").addEventListener("click", ()=>{
     if(!confirm("Erase all saved progress: per-question records, session history and last-attempt scores? This cannot be undone.")) return;
     MEM = {}; SESS = []; HIST = {};
+    clearResume();
     lsSet("pharmQuizMem", MEM); lsSet("pharmQuizSessions", SESS); lsSet("pharmQuizHistory", HIST);
     render();
   });
@@ -2997,7 +3121,7 @@ window.addEventListener("popstate", function(e){
   let v = st.v || "home";
   if(state.view==="quiz" && v!=="quiz"){
     const touched = Object.keys(state.answers).length>0;
-    if(touched && !state.leaving && !confirm("Leave this session? Your answers in this attempt will be lost.")){
+    if(touched && !state.leaving && !confirm("Leave this session? It will be saved so you can resume it from the home screen.")){
       nav.i = (st.i||0)+1;
       try{ history.pushState({v:"quiz", i:nav.i}, ""); }catch(err){}
       return;
@@ -3038,6 +3162,8 @@ document.addEventListener("keydown",(e)=>{
   }
 });
 
+window.addEventListener("pagehide", saveResume);
+document.addEventListener("visibilitychange", function(){ if(document.visibilityState==="hidden") saveResume(); });
 nav.init();
 render();
 
