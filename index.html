@@ -54,7 +54,7 @@
   padding-top:env(safe-area-inset-top,0px);
   padding-bottom:env(safe-area-inset-bottom,0px);
 }
-*,*::before,*::after{box-sizing:inherit}
+*,*::before,*::after{box-sizing:border-box}  /* explicit: content inside <details> would otherwise inherit content-box from the browser's internal slot */
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 html,body{height:100%}
 body{
@@ -315,6 +315,20 @@ h2.section-title::after{content:"";flex:1;height:1px;background:var(--rule-stron
 .mock-card .btn{background:var(--accent);border-color:var(--accent);color:#F7F0E1;font-weight:700}
 .mock-card .btn:hover{background:#A34838;border-color:#A34838;color:#F7F0E1}
 
+.folders{display:grid;gap:10px}
+.folder{background:var(--paper);border:1px solid var(--rule-strong);border-left:4px solid var(--accent);border-radius:var(--radius-m);box-shadow:var(--shadow-page)}
+.folder>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;padding:14px 14px 14px 14px;-webkit-tap-highlight-color:transparent}
+.folder>summary::-webkit-details-marker{display:none}
+.folder>summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.folder-ico{flex:none;width:22px;height:22px;color:var(--accent)}
+.folder-main{flex:1;min-width:0}
+.folder-title{font-weight:700;font-size:16px;line-height:1.25;color:var(--ink)}
+.folder-sub{font-size:12.5px;line-height:1.4;color:var(--ink-soft);margin-top:2px}
+.folder-chev{flex:none;width:18px;height:18px;color:var(--ink-soft);transition:transform .18s ease}
+.folder[open] .folder-chev{transform:rotate(90deg)}
+.folder-body{padding:12px 14px 14px;border-top:1px dashed var(--rule-strong)}
+.folder-lede{margin:0 0 12px;color:var(--ink-soft);font-size:13.5px;line-height:1.5}
+@media (prefers-reduced-motion:reduce){.folder-chev{transition:none}}
 .footnote{margin-top:32px;padding-top:14px;border-top:1px dashed var(--rule-strong);color:var(--ink-faint);font-size:12.5px;line-height:1.65}
 .footnote strong{color:var(--ink-soft)}
 
@@ -647,13 +661,15 @@ const CATEGORIES = {
   lb5: { name:"Interactions, Pharmacogenetics & ADRs", short:"Bank: ADRs", chip:"Interactions & ADRs", color:"var(--c-nsaid)", desc:"Drug interactions, genetic variation in response, special populations and adverse reaction types.", group:"bank" },
   lb6: { name:"Cholinergic Pharmacology", short:"Bank: Cholinergic", chip:"Cholinergic", color:"var(--c-chol)", desc:"ACh synthesis and receptors, cholinomimetics, cholinesterase inhibitors, antimuscarinics, neuromuscular and ganglion blockers.", group:"bank" },
   lb7: { name:"Adrenergic Pharmacology", short:"Bank: Adrenergic", chip:"Adrenergic", color:"var(--c-adr)", desc:"Catecholamine synthesis and fate, adrenoceptor agonists, alpha and beta blockers, indirect and central sympatholytics.", group:"bank" },
-  lb8: { name:"Autacoids", short:"Bank: Autacoids", chip:"Autacoids", color:"var(--c-auta)", desc:"Eicosanoids and NSAIDs, angiotensin and kinins, histamine and antihistamines, serotonin and related drugs.", group:"bank" }
+  lb8: { name:"Autacoids", short:"Bank: Autacoids", chip:"Autacoids", color:"var(--c-auta)", desc:"Eicosanoids and NSAIDs, angiotensin and kinins, histamine and antihistamines, serotonin and related drugs.", group:"bank" },
+  calc: { name:"Pharmacokinetics Calculations", short:"PK Calcs", chip:"PK calculations", color:"var(--c-pk)", desc:"50 worked problems in five levels, from half-life and volume of distribution to loading doses, clearance, renal adjustment and multi-step dosing. Questions run in order, easiest first.", group:"calc" }
 };
 const LEC_ORDER = ["lb1", "lb2", "lb3", "lb4", "lb5", "lb6", "lb7", "lb8"];
 const TOPIC_ORDER = ["gen","pk","pd","chol","adr","auta","nsaid"];
 const KATZUNG_ORDER = ["k1","k2","k3","k4","k5","k6","k7","k8","k9","k10"];
 const BABBINI_ORDER = ["b_pk","b_pd","b_ae","b_ans","b_adr","b_antiadr","b_chol","b_antichol"];
-const CAT_ORDER = LEC_ORDER.concat(TOPIC_ORDER, KATZUNG_ORDER, BABBINI_ORDER);
+const CALC_ORDER = ["calc"];
+const CAT_ORDER = LEC_ORDER.concat(TOPIC_ORDER, KATZUNG_ORDER, BABBINI_ORDER, CALC_ORDER);
 
 /* ---------- Question bank ---------- */
 const QUESTIONS = {
@@ -1767,6 +1783,208 @@ lb8: [
  {"q":"Fever, clonus, agitation and diarrhoea after adding linezolid to an SSRI suggest serotonin syndrome. A useful treatment is:","o":["Dantrolene", "Cyproheptadine", "Naloxone", "Flumazenil"],"a":1,"ex":"5-HT2A antagonist; stop the serotonergic drugs and give benzodiazepines.","src":"CLI 414 topic bank — Autacoids"},
  {"q":"Carcinoid syndrome symptoms are controlled with:","o":["Octreotide", "Sumatriptan", "Buspirone", "Metoclopramide"],"a":0,"ex":"Urinary 5-HIAA is raised.","src":"CLI 414 topic bank — Autacoids"},
  {"q":"Chronic ergotamine overuse can cause:","o":["Limb ischaemia", "Marked vasodilation", "Bronchodilation", "Profuse diarrhoea"],"a":0,"ex":"Ergotism from persistent vasoconstriction.","src":"CLI 414 topic bank — Autacoids"}
+],
+calc:[
+{q:"A drug has a first-order elimination rate constant (k) of 0.0693 h⁻¹. What is its half-life?",
+  o:["0.05 h", "0.1 h", "10 h", "14.4 h", "100 h"], a:2,
+  ex:"t½ = 0.693 / k = 0.693 / 0.0693 = 10 h. Using 1/k (14.4 h) is a common slip.",
+  src:"PK calculations · Level 1 of 5: core concepts"},
+{q:"A drug has a half-life of 6 h. What is its elimination rate constant?",
+  o:["0.12 h⁻¹", "0.17 h⁻¹", "0.24 h⁻¹", "4.2 h⁻¹", "8.7 h⁻¹"], a:0,
+  ex:"k = 0.693 / t½ = 0.693 / 6 = 0.116, about 0.12 h⁻¹. Multiplying 0.693 by t½ (4.2) inverts the relationship.",
+  src:"PK calculations · Level 1 of 5: core concepts"},
+{q:"An IV dose of 160 mg of a drug with a half-life of 4 h is given. How much drug remains in the body after 12 h (first-order kinetics)?",
+  o:["2.5 mg", "5 mg", "10 mg", "13 mg", "20 mg"], a:4,
+  ex:"12 h is 3 half-lives (12 / 4): 160 → 80 → 40 → 20 mg.",
+  src:"PK calculations · Level 1 of 5: core concepts"},
+{q:"An IV bolus of 500 mg gives an initial plasma concentration (C0) of 10 mg/L. What is the volume of distribution?",
+  o:["5 L", "50 L", "100 L", "510 L", "5000 L"], a:1,
+  ex:"Vd = dose / C0 = 500 mg / 10 mg/L = 50 L.",
+  src:"PK calculations · Level 1 of 5: core concepts"},
+{q:"A patient's Vd for a drug is 40 L. What single IV dose is needed to produce a plasma concentration of 5 mg/L?",
+  o:["8 mg", "35 mg", "45 mg", "200 mg", "400 mg"], a:3,
+  ex:"Dose = Vd × target concentration = 40 L × 5 mg/L = 200 mg. Dividing (8 mg) is the usual error.",
+  src:"PK calculations · Level 1 of 5: core concepts"},
+{q:"A drug is being eliminated at a rate of 30 mg/h when the plasma concentration is 2 mg/L. What is the clearance?",
+  o:["15 L/h", "28 L/h", "30 L/h", "32 L/h", "60 L/h"], a:0,
+  ex:"Clearance = rate of elimination / plasma concentration = 30 mg/h ÷ 2 mg/L = 15 L/h.",
+  src:"PK calculations · Level 1 of 5: core concepts"},
+{q:"An oral and an IV dose of 100 mg each are given on separate occasions. The AUC after the oral dose is 40 mg·h/L and after the IV dose is 100 mg·h/L. What is the oral bioavailability?",
+  o:["4%", "10%", "20%", "25%", "40%"], a:4,
+  ex:"F = AUC(oral) / AUC(IV) when doses are equal = 40 / 100 = 0.40 (40%).",
+  src:"PK calculations · Level 1 of 5: core concepts"},
+{q:"A drug with a half-life of 10 h is given by constant IV infusion. About how long until the plasma concentration reaches approximately 94% of its steady-state value?",
+  o:["20 h", "30 h", "40 h", "60 h", "100 h"], a:2,
+  ex:"Fraction of Css reached = 1 − (½)ⁿ. After 4 half-lives it is 93.75% (about 94%), so 4 × 10 h = 40 h.",
+  src:"PK calculations · Level 1 of 5: core concepts"},
+{q:"A drug has a clearance of 5 L/h. What infusion rate is needed to maintain a steady-state concentration of 4 mg/L?",
+  o:["9 mg/h", "20 mg/h", "30 mg/h", "40 mg/h", "60 mg/h"], a:1,
+  ex:"At steady state, infusion rate = CL × Css = 5 L/h × 4 mg/L = 20 mg/h.",
+  src:"PK calculations · Level 1 of 5: core concepts"},
+{q:"A drug has a clearance of 2 L/h and a volume of distribution of 40 L. What is its elimination rate constant?",
+  o:["0.017 h⁻¹", "0.025 h⁻¹", "0.033 h⁻¹", "0.05 h⁻¹", "0.5 h⁻¹"], a:3,
+  ex:"k = CL / Vd = 2 / 40 = 0.05 h⁻¹ (this corresponds to a half-life of about 14 h).",
+  src:"PK calculations · Level 1 of 5: core concepts"},
+{q:"A drug has Vd = 60 L and CL = 20 L/h. What is its half-life?",
+  o:["0.23 h", "0.33 h", "2.1 h", "3.0 h", "4.2 h"], a:2,
+  ex:"t½ = 0.693 × Vd / CL = 0.693 × 60 / 20 = 2.08 h. Leaving out 0.693 gives 3.0 h.",
+  src:"PK calculations · Level 2 of 5: dosing building blocks"},
+{q:"A patient needs the equivalent of 200 mg of a drug to reach the systemic circulation. The oral bioavailability is 0.5. What oral dose should be given?",
+  o:["400 mg", "500 mg", "600 mg", "800 mg", "1200 mg"], a:0,
+  ex:"Oral dose = required dose / F = 200 / 0.5 = 400 mg.",
+  src:"PK calculations · Level 2 of 5: dosing building blocks"},
+{q:"A drug has Vd = 50 L. What IV loading dose will produce an immediate plasma concentration of 8 mg/L?",
+  o:["6 mg", "42 mg", "58 mg", "200 mg", "400 mg"], a:4,
+  ex:"Loading dose = Vd × target concentration = 50 × 8 = 400 mg.",
+  src:"PK calculations · Level 2 of 5: dosing building blocks"},
+{q:"An oral drug (F = 0.8) has Vd = 40 L. What oral loading dose will achieve a plasma concentration of 10 mg/L?",
+  o:["400 mg", "500 mg", "625 mg", "750 mg", "3200 mg"], a:1,
+  ex:"Loading dose = (Vd × target) / F = (40 × 10) / 0.8 = 500 mg. Ignoring F gives 400 mg.",
+  src:"PK calculations · Level 2 of 5: dosing building blocks"},
+{q:"A drug has CL = 10 L/h and F = 1. What dose should be given every 8 h to maintain an average steady-state concentration of 5 mg/L?",
+  o:["4 mg", "16 mg", "50 mg", "400 mg", "800 mg"], a:3,
+  ex:"Maintenance dose = CL × Css × τ / F = 10 × 5 × 8 / 1 = 400 mg every 8 h. Without the interval you only have the hourly rate (50 mg/h).",
+  src:"PK calculations · Level 2 of 5: dosing building blocks"},
+{q:"A drug has CL = 6 L/h and F = 0.6. What oral dose given every 12 h will maintain an average steady-state concentration of 10 mg/L?",
+  o:["1200 mg", "1800 mg", "2000 mg", "2400 mg", "7200 mg"], a:0,
+  ex:"Dose = CL × Css × τ / F = 6 × 10 × 12 / 0.6 = 720 / 0.6 = 1200 mg every 12 h. Multiplying by F instead of dividing under-doses the patient.",
+  src:"PK calculations · Level 2 of 5: dosing building blocks"},
+{q:"The plasma concentration of a drug is 40 mg/L immediately after an IV dose. Its half-life is 3 h. What is the concentration 9 h later?",
+  o:["1 mg/L", "1.7 mg/L", "2.5 mg/L", "3.3 mg/L", "5 mg/L"], a:4,
+  ex:"9 h is 3 half-lives: 40 → 20 → 10 → 5 mg/L.",
+  src:"PK calculations · Level 2 of 5: dosing building blocks"},
+{q:"A drug has a half-life of 2 h. How long will it take for the plasma concentration to fall from 64 mg/L to 4 mg/L?",
+  o:["4 h", "6 h", "8 h", "16 h", "32 h"], a:2,
+  ex:"64 → 4 is a 16-fold fall, which is 4 half-lives (2⁴ = 16). 4 × 2 h = 8 h.",
+  src:"PK calculations · Level 2 of 5: dosing building blocks"},
+{q:"A drug with a half-life of 5 h is infused at a constant rate. What percentage of the steady-state concentration is reached after 15 h?",
+  o:["50%", "75%", "87.5%", "93.8%", "96.9%"], a:2,
+  ex:"15 h = 3 half-lives. Fraction of Css = 1 − (½)³ = 0.875, or 87.5%.",
+  src:"PK calculations · Level 2 of 5: dosing building blocks"},
+{q:"A drug is infused at 30 mg/h. Its clearance is 6 L/h. What is the steady-state plasma concentration?",
+  o:["0.2 mg/L", "2.5 mg/L", "3.3 mg/L", "5 mg/L", "24 mg/L"], a:3,
+  ex:"Css = infusion rate / CL = 30 / 6 = 5 mg/L.",
+  src:"PK calculations · Level 2 of 5: dosing building blocks"},
+{q:"A drug with Vd = 50 L and CL = 25 L/h is started on a constant IV infusion. How long until 75% of the steady-state concentration is reached?",
+  o:["0.7 h", "1.4 h", "2.8 h", "4.2 h", "5.5 h"], a:2,
+  ex:"t½ = 0.693 × 50 / 25 = 1.39 h. 75% of Css is reached after 2 half-lives, so 2 × 1.39 = 2.8 h.",
+  src:"PK calculations · Level 3 of 5: applied calculations"},
+{q:"After an IV bolus, the plasma concentration is 2.5 mg/L at 8 h. The half-life is 4 h and Vd is 60 L. What dose was given?",
+  o:["600 mg", "900 mg", "1200 mg", "1800 mg", "2400 mg"], a:0,
+  ex:"8 h is 2 half-lives, so C0 = 2.5 × 4 = 10 mg/L. Dose = C0 × Vd = 10 × 60 = 600 mg. Using 2.5 × 60 = 150 mg ignores the decay.",
+  src:"PK calculations · Level 3 of 5: applied calculations"},
+{q:"A 500 mg IV dose gives an AUC of 25 mg·h/L. What is the clearance?",
+  o:["0.05 L/h", "5 L/h", "10 L/h", "15 L/h", "20 L/h"], a:4,
+  ex:"CL = dose / AUC = 500 / 25 = 20 L/h (for an IV dose, F = 1).",
+  src:"PK calculations · Level 3 of 5: applied calculations"},
+{q:"An oral dose of 200 mg gives an AUC of 30 mg·h/L. An IV dose of 100 mg gives an AUC of 25 mg·h/L. What is the oral bioavailability?",
+  o:["15%", "40%", "60%", "83%", "120%"], a:2,
+  ex:"F = (AUC oral / dose oral) / (AUC IV / dose IV) = (30/200) / (25/100) = 0.15 / 0.25 = 0.60. Ignoring the different doses gives 120%.",
+  src:"PK calculations · Level 3 of 5: applied calculations"},
+{q:"A drug's urine concentration is 300 mg/L, urine flow is 1 mL/min and plasma concentration is 3 mg/L. What is the renal clearance?",
+  o:["1 mL/min", "3 mL/min", "33 mL/min", "100 mL/min", "300 mL/min"], a:3,
+  ex:"CLr = (U × V) / P = (300 × 1) / 3 = 100 mL/min. Omitting the plasma concentration gives 300 mL/min.",
+  src:"PK calculations · Level 3 of 5: applied calculations"},
+{q:"A drug has a total clearance of 10 L/h and 40% is excreted unchanged in urine. What is its renal clearance?",
+  o:["4 L/h", "6 L/h", "8 L/h", "14 L/h", "25 L/h"], a:0,
+  ex:"CLr = fraction excreted unchanged × total CL = 0.4 × 10 = 4 L/h. The remaining 6 L/h is non-renal clearance.",
+  src:"PK calculations · Level 3 of 5: applied calculations"},
+{q:"A drug is cleared half by the kidney and half by the liver (total CL 6 L/h). A patient has renal function 50% of normal and normal liver function. To keep the same average steady-state concentration, the maintenance dose should be what percentage of the usual dose?",
+  o:["25%", "40%", "50%", "60%", "75%"], a:4,
+  ex:"Renal CL = 3 × 0.5 = 1.5 L/h, hepatic CL stays 3 L/h, so total CL = 4.5 L/h. Dose scales with clearance: 4.5 / 6 = 75%.",
+  src:"PK calculations · Level 3 of 5: applied calculations"},
+{q:"A weak base has a pKa of 8.4. At a plasma pH of 7.4, approximately what percentage is in the unionised (lipid-soluble) form?",
+  o:["1%", "6%", "9%", "50%", "91%"], a:2,
+  ex:"For a base, log(ionised/unionised) = pKa − pH = 1, so the ratio is 10:1. Unionised = 1/11 = 9%. The 91% figure is the ionised fraction.",
+  src:"PK calculations · Level 3 of 5: applied calculations"},
+{q:"Estimate the creatinine clearance (Cockcroft-Gault) of a 60-year-old man weighing 70 kg with a serum creatinine of 1.2 mg/dL. CrCl = (140 − age) × weight / (72 × SCr) for men.",
+  o:["55 mL/min", "65 mL/min", "78 mL/min", "95 mL/min", "130 mL/min"], a:1,
+  ex:"CrCl = (140 − 60) × 70 / (72 × 1.2) = 5600 / 86.4 = 65 mL/min. Applying the female factor (×0.85) gives 55, and using SCr = 1.0 gives 78.",
+  src:"PK calculations · Level 3 of 5: applied calculations"},
+{q:"Estimate the creatinine clearance of a 70-year-old woman weighing 60 kg with a serum creatinine of 1.0 mg/dL. Use the Cockcroft-Gault formula, multiplying by 0.85 for women.",
+  o:["25 mL/min", "35 mL/min", "42 mL/min", "50 mL/min", "58 mL/min"], a:3,
+  ex:"CrCl = (140 − 70) × 60 / (72 × 1.0) = 58.3 mL/min. Multiply by 0.85 for a woman: 49.6, about 50 mL/min. Forgetting the 0.85 gives 58.",
+  src:"PK calculations · Level 3 of 5: applied calculations"},
+{q:"A drug has a volume of distribution of 0.7 L/kg. What loading dose is needed to achieve a concentration of 15 mg/L in an 80 kg patient?",
+  o:["10.5 mg", "420 mg", "840 mg", "1200 mg", "1680 mg"], a:2,
+  ex:"Vd = 0.7 × 80 = 56 L. Loading dose = 56 × 15 = 840 mg.",
+  src:"PK calculations · Level 4 of 5: clinical calculations"},
+{q:"A drug (F = 1, CL = 5 L/h) is given as 500 mg every 12 h. What is the average steady-state plasma concentration?",
+  o:["8.3 mg/L", "10 mg/L", "25 mg/L", "41.7 mg/L", "100 mg/L"], a:0,
+  ex:"Css,avg = F × dose / (CL × τ) = 500 / (5 × 12) = 8.3 mg/L.",
+  src:"PK calculations · Level 4 of 5: clinical calculations"},
+{q:"IV bolus doses of a drug are given at an interval equal to its half-life. At steady state, the peak concentration is how many times the peak after the first dose?",
+  o:["1.1 times", "1.25 times", "1.5 times", "1.75 times", "2 times"], a:4,
+  ex:"Accumulation factor = 1 / (1 − e^(−kτ)). When τ = t½, e^(−kτ) = 0.5, so the factor is 1 / 0.5 = 2.",
+  src:"PK calculations · Level 4 of 5: clinical calculations"},
+{q:"A drug (Vd = 40 L, t½ = 8 h) is given as 400 mg IV boluses every 8 h. What is the steady-state trough concentration?",
+  o:["5 mg/L", "10 mg/L", "15 mg/L", "20 mg/L", "40 mg/L"], a:1,
+  ex:"Single-dose C0 = 400 / 40 = 10 mg/L. Steady-state peak = 10 / (1 − 0.5) = 20 mg/L. The trough is one half-life later: 20 × 0.5 = 10 mg/L.",
+  src:"PK calculations · Level 4 of 5: clinical calculations"},
+{q:"Ethanol is eliminated by zero-order kinetics at about 15 mg/dL per hour. How long will it take for a blood ethanol level of 90 mg/dL to reach zero?",
+  o:["3 h", "4.5 h", "5 h", "6 h", "7.5 h"], a:3,
+  ex:"Zero-order elimination removes a fixed amount per hour regardless of concentration: 90 / 15 = 6 h. (First-order drugs never reach exactly zero.)",
+  src:"PK calculations · Level 4 of 5: clinical calculations"},
+{q:"Phenytoin shows saturable elimination with Vmax = 500 mg/day and Km = 4 mg/L. What is the steady-state concentration at a dose of 400 mg/day? (Css = Km × R / (Vmax − R))",
+  o:["16 mg/L", "20 mg/L", "24 mg/L", "32 mg/L", "48 mg/L"], a:0,
+  ex:"Css = 4 × 400 / (500 − 400) = 16 mg/L. At 300 mg/day it would be 4 × 300 / 200 = 6 mg/L, so a 33% dose rise nearly triples the level. That is why small phenytoin increases are dangerous.",
+  src:"PK calculations · Level 4 of 5: clinical calculations"},
+{q:"A patient on 300 mg/day of a drug with linear kinetics has a steady-state concentration of 8 mg/L. The target is 12 mg/L. What new daily dose is needed?",
+  o:["200 mg/day", "250 mg/day", "300 mg/day", "400 mg/day", "450 mg/day"], a:4,
+  ex:"With linear kinetics, Css is proportional to dose rate: new dose = 300 × (12 / 8) = 450 mg/day.",
+  src:"PK calculations · Level 4 of 5: clinical calculations"},
+{q:"A patient's plasma concentration is 4 mg/L and the target is 10 mg/L. Vd is 50 L. What extra IV dose will raise the concentration to target?",
+  o:["150 mg", "200 mg", "300 mg", "500 mg", "600 mg"], a:2,
+  ex:"Dose = (target − current) × Vd = (10 − 4) × 50 = 300 mg.",
+  src:"PK calculations · Level 4 of 5: clinical calculations"},
+{q:"The plasma concentration of a drug is 20 mg/L at 2 h and 5 mg/L at 8 h after an IV dose (first-order kinetics). What is the half-life?",
+  o:["2 h", "3 h", "4 h", "5 h", "6 h"], a:1,
+  ex:"20 → 5 is a 4-fold fall, which is 2 half-lives. These occur over 8 − 2 = 6 h, so t½ = 3 h.",
+  src:"PK calculations · Level 4 of 5: clinical calculations"},
+{q:"A drug's plasma concentration is 16 mg/L at 1 h and 2 mg/L at 5 h (first-order kinetics). What is the half-life?",
+  o:["0.7 h", "0.8 h", "1.0 h", "1.3 h", "2.0 h"], a:3,
+  ex:"16 → 2 is an 8-fold fall, which is 3 half-lives. These occur over 4 h, so t½ = 4 / 3 = 1.3 h. Assuming 2 half-lives gives 2 h.",
+  src:"PK calculations · Level 4 of 5: clinical calculations"},
+{q:"An IV dose of 800 mg is given. The plasma concentration is 10 mg/L at 4 h and the half-life is 2 h. What is the volume of distribution?",
+  o:["10 L", "16 L", "20 L", "40 L", "80 L"], a:2,
+  ex:"4 h is 2 half-lives, so C0 = 10 × 4 = 40 mg/L. Vd = dose / C0 = 800 / 40 = 20 L. Using the 4 h concentration directly gives 80 L.",
+  src:"PK calculations · Level 5 of 5: multi-step problems"},
+{q:"A patient needs a steady-state lidocaine concentration of 3 mg/L. Lidocaine clearance in this patient is 30 L/h. What infusion rate is needed?",
+  o:["1.5 mg/min", "2 mg/min", "3 mg/min", "5 mg/min", "90 mg/min"], a:0,
+  ex:"Rate = CL × Css = 30 × 3 = 90 mg/h. Convert to per minute: 90 / 60 = 1.5 mg/min. Quoting 90 reports the hourly figure.",
+  src:"PK calculations · Level 5 of 5: multi-step problems"},
+{q:"A 70 kg patient is given vancomycin 1000 mg IV (Vd = 0.7 L/kg, half-life = 6 h). What is the concentration just before a second dose at 12 h?",
+  o:["1.3 mg/L", "2.6 mg/L", "3.4 mg/L", "4.1 mg/L", "5.1 mg/L"], a:4,
+  ex:"Vd = 0.7 × 70 = 49 L, so C0 = 1000 / 49 = 20.4 mg/L. 12 h is 2 half-lives, so the trough is 20.4 / 4 = 5.1 mg/L. The 20.4 figure is the peak.",
+  src:"PK calculations · Level 5 of 5: multi-step problems"},
+{q:"A drug with a half-life of 6 h is stopped. About how long until roughly 97% of it has been eliminated?",
+  o:["24 h", "30 h", "45 h", "60 h", "90 h"], a:1,
+  ex:"After 5 half-lives, 1 − (½)⁵ = 96.9% has been eliminated. 5 × 6 h = 30 h.",
+  src:"PK calculations · Level 5 of 5: multi-step problems"},
+{q:"The usual dose of a drug is 600 mg every 12 h in a patient with normal clearance. A patient's clearance is one third of normal. To keep the same average steady-state concentration and interval, what dose should be given?",
+  o:["67 mg", "100 mg", "150 mg", "200 mg", "300 mg"], a:3,
+  ex:"Maintenance dose is proportional to clearance at a fixed interval: 600 × (1/3) = 200 mg every 12 h.",
+  src:"PK calculations · Level 5 of 5: multi-step problems"},
+{q:"An oral drug (F = 0.8, Vd = 70 L, CL = 7 L/h) is given every 12 h. What dose will produce an average steady-state concentration of 6 mg/L?",
+  o:["630 mg", "788 mg", "840 mg", "1000 mg", "1260 mg"], a:0,
+  ex:"Dose = CL × Css × τ / F = 7 × 6 × 12 / 0.8 = 504 / 0.8 = 630 mg.",
+  src:"PK calculations · Level 5 of 5: multi-step problems"},
+{q:"For the same drug (F = 0.8, Vd = 70 L), what oral loading dose will bring the plasma concentration to 6 mg/L immediately?",
+  o:["210 mg", "280 mg", "336 mg", "420 mg", "525 mg"], a:4,
+  ex:"Loading dose = Vd × target / F = 70 × 6 / 0.8 = 420 / 0.8 = 525 mg.",
+  src:"PK calculations · Level 5 of 5: multi-step problems"},
+{q:"A drug has a hepatic extraction ratio of 0.6 and liver blood flow is 90 L/h. What is the hepatic clearance?",
+  o:["27 L/h", "36 L/h", "54 L/h", "90 L/h", "150 L/h"], a:2,
+  ex:"CL(hepatic) = liver blood flow × extraction ratio = 90 × 0.6 = 54 L/h. The 36 L/h figure uses (1 − E), which is the fraction escaping first pass.",
+  src:"PK calculations · Level 5 of 5: multi-step problems"},
+{q:"A drug is completely absorbed but has a hepatic extraction ratio of 0.7 (no gut metabolism). What oral dose gives the same systemic exposure as 100 mg IV?",
+  o:["143 mg", "333 mg", "500 mg", "700 mg", "1000 mg"], a:1,
+  ex:"Oral bioavailability F = 1 − E = 0.3. Oral dose = IV dose / F = 100 / 0.3 = 333 mg. Dividing by 0.7 (143 mg) uses the extracted fraction instead of the surviving fraction.",
+  src:"PK calculations · Level 5 of 5: multi-step problems"},
+{q:"A drug is cleared entirely by the kidney. The usual dose is 500 mg every 12 h for a creatinine clearance of 100 mL/min. A 70-year-old woman weighing 60 kg has a serum creatinine of 1.0 mg/dL. Using Cockcroft-Gault, what dose every 12 h is most appropriate?",
+  o:["100 mg", "125 mg", "200 mg", "250 mg", "290 mg"], a:3,
+  ex:"CrCl = (140 − 70) × 60 / 72 × 0.85 = 49.6, about 50 mL/min, which is half of normal. Omitting the 0.85 factor gives 58 mL/min and 290 mg.",
+  src:"PK calculations · Level 5 of 5: multi-step problems"}
 ]
 };
 
@@ -1796,9 +2014,10 @@ CAT_ORDER.forEach(cat=>{
 const GROUPS = {
   past:  {name:"Past-question topics",  short:"Past questions", cats:TOPIC_ORDER},
   katz:  {name:"Katzung chapters",      short:"Katzung",        cats:KATZUNG_ORDER},
-  usmle: {name:"USMLE-style (Babbini)", short:"USMLE-style",    cats:BABBINI_ORDER}
+  usmle: {name:"USMLE-style (Babbini)", short:"USMLE-style",    cats:BABBINI_ORDER},
+  calc:  {name:"PK calculations",       short:"PK calcs",       cats:CALC_ORDER}
 };
-const GROUP_ORDER = ["past","katz","usmle"];
+const GROUP_ORDER = ["past","katz","usmle","calc"];
 const BUILD_IDS = LEC_ORDER.concat(GROUP_ORDER);
 
 /* ---------- App state ---------- */
@@ -2493,16 +2712,35 @@ function bindBuilder(){
   syncBuilder();
 }
 
+/* ---------- Collapsible question-bank folders on the home screen ---------- */
+const FOLDER_KEY = "pharmQuizFolders";
+let OPEN_FOLDERS = lsGet(FOLDER_KEY, {});
+if(!OPEN_FOLDERS || typeof OPEN_FOLDERS!=="object" || Array.isArray(OPEN_FOLDERS)) OPEN_FOLDERS = {};
+const FOLDER_ICO = '<svg class="folder-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>';
+const FOLDER_CHEV = '<svg class="folder-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
+function qTotal(cats){ return cats.reduce((s,c)=>s+(QUESTIONS[c]||[]).length,0); }
+function folderHtml(id, title, sub, cats, lede, cardsHtml){
+  const st = statFor(cats);
+  return '<details class="folder" data-folder="'+id+'"'+(OPEN_FOLDERS[id] ? " open" : "")+'>'+
+    '<summary>'+FOLDER_ICO+
+      '<div class="folder-main"><div class="folder-title">'+title+'</div>'+
+      '<div class="folder-sub">'+sub+(st.n ? ' · Overall '+st.pct+'%' : '')+'</div></div>'+
+    FOLDER_CHEV+'</summary>'+
+    '<div class="folder-body">'+(lede ? '<p class="folder-lede">'+lede+'</p>' : '')+'<div class="cards">'+cardsHtml+'</div></div>'+
+  '</details>';
+}
+
 function renderHome(){
   const totalCats = CAT_ORDER.length + 1; /* topics + mock */
   const leCount = LEC_ORDER.reduce((s,c)=>s+(QUESTIONS[c]||[]).length,0);
   const mockHist = HIST["mock"];
   const paceOptions = [45,60,90,null];
 
-  let leCards = "", cardsHtml = "", kCards = "", bCards = "";
+  let leCards = "", cardsHtml = "", kCards = "", bCards = "", calcCards = "";
   LEC_ORDER.forEach(cat=>{ leCards += catCard(cat, '<span class="n-badge">Topic bank</span>'); });
   TOPIC_ORDER.forEach(cat=>{ cardsHtml += catCard(cat, ""); });
   KATZUNG_ORDER.forEach(cat=>{ kCards += catCard(cat, '<span class="k-badge">Katzung</span>'); });
+  CALC_ORDER.forEach(cat=>{ calcCards += catCard(cat, '<span class="n-badge">Calculations</span>'); });
   BABBINI_ORDER.forEach(cat=>{ if(CATEGORIES[cat] && QUESTIONS[cat]) bCards += catCard(cat, '<span class="b-badge">USMLE-style</span>'); });
 
   app.innerHTML =
@@ -2541,19 +2779,25 @@ function renderHome(){
       '</div>'+
       '<div class="card-actions"><button class="btn block" data-start="mock">Start mock exam</button></div>'+
     '</div>'+
-    '<h2 class="section-title">Topic bank — 8 lecture topics</h2>'+
-    '<p class="lede" style="margin-top:-6px;margin-bottom:12px;color:var(--ink-soft);font-size:14px">'+leCount+' questions, 50 per topic. Answer options are shuffled every session, so position never gives the answer away.</p>'+
-    '<div class="cards">'+leCards+'</div>'+
-    '<h2 class="section-title">Past-question topics</h2>'+
-    '<div class="cards">'+cardsHtml+'</div>'+
-    '<h2 class="section-title">Katzung chapter reviews</h2>'+
-    '<div class="cards">'+kCards+'</div>'+
-    (bCards ? '<h2 class="section-title">USMLE-style — Babbini & Thomas</h2><p class="lede" style="margin-top:-6px;margin-bottom:12px;color:var(--ink-soft);font-size:14px">General principles and autonomic nervous system from <em>Pharmacology Test Prep</em> ('+BABBINI_ORDER.reduce((s,c)=>s+(QUESTIONS[c]||[]).length,0)+' USMLE-style questions).</p><div class="cards">'+bCards+'</div>' : '')+
+    '<h2 class="section-title">Question banks</h2>'+
+    '<div class="folders">'+
+      folderHtml("bank","Topic bank","8 lecture topics · "+leCount+" questions",LEC_ORDER,"50 questions per topic. Answer options are shuffled every session, so position never gives the answer away.",leCards)+
+      folderHtml("past","Past-question topics",TOPIC_ORDER.length+" topics · "+qTotal(TOPIC_ORDER)+" questions",TOPIC_ORDER,"",cardsHtml)+
+      folderHtml("katz","Katzung chapter reviews",KATZUNG_ORDER.length+" chapters · "+qTotal(KATZUNG_ORDER)+" questions",KATZUNG_ORDER,"",kCards)+
+      (bCards ? folderHtml("usmle","USMLE-style (Babbini & Thomas)",BABBINI_ORDER.length+" chapters · "+qTotal(BABBINI_ORDER)+" questions",BABBINI_ORDER,"General principles and autonomic nervous system from <em>Pharmacology Test Prep</em>.",bCards) : '')+
+      folderHtml("calc","Pharmacokinetics calculations","50 problems · easiest to hardest",CALC_ORDER,"Five levels of ten, always in order. Have a pen and calculator ready, and consider choosing Untimed or 90 seconds above.",calcCards)+
+    '</div>'+
     '<div class="footnote">'+
-      '<strong>About this question bank.</strong> '+ALL.length+' questions in total: the '+leCount+'-question topic bank, lecture past questions, Katzung chapter reviews (Ch. 1–10), and '+BABBINI_ORDER.reduce((s,c)=>s+(QUESTIONS[c]||[]).length,0)+' USMLE-style items from Babbini & Thomas covering general pharmacology and the autonomic nervous system. This is a revision aid, not a substitute for lecture notes — always cross-check against what was taught in class. Everything runs locally in your browser and your progress is saved on this device only; no data leaves it.'+
+      '<strong>About this question bank.</strong> '+ALL.length+' questions in total: the '+leCount+'-question topic bank, lecture past questions, Katzung chapter reviews (Ch. 1–10), and '+BABBINI_ORDER.reduce((s,c)=>s+(QUESTIONS[c]||[]).length,0)+' USMLE-style items from Babbini & Thomas covering general pharmacology and the autonomic nervous system, plus 50 pharmacokinetic calculation problems that progress from basic to multi-step. This is a revision aid, not a substitute for lecture notes — always cross-check against what was taught in class. Everything runs locally in your browser and your progress is saved on this device only; no data leaves it.'+
     '</div>'+
   '</div>';
 
+  document.querySelectorAll("details.folder").forEach(dt=>{
+    dt.addEventListener("toggle", ()=>{
+      OPEN_FOLDERS[dt.getAttribute("data-folder")] = dt.open;
+      lsSet(FOLDER_KEY, OPEN_FOLDERS);
+    });
+  });
   document.querySelectorAll("[data-pace]").forEach(b=>{
     b.addEventListener("click", ()=>{
       const v = b.getAttribute("data-pace");
@@ -2685,7 +2929,7 @@ function startList(list, meta, replace){
 function startSession(catKey){
   let list, title, color;
   if(catKey==="mock"){
-    list = dedupe(shuffle(ALL)).slice(0, 50);
+    list = dedupe(shuffle(ALL.filter(q=>q.cat!=="calc"))).slice(0, 50);
     title = "Full Mock Exam";
     color = "var(--c-mock)";
   } else {
@@ -3173,6 +3417,7 @@ function renderProgress(){
       groupHtml("Past-question topics", TOPIC_ORDER)+
       groupHtml("Katzung chapters", KATZUNG_ORDER)+
       groupHtml("USMLE-style (Babbini)", BABBINI_ORDER)+
+      groupHtml("PK calculations", CALC_ORDER)+
       '<p class="trend-cap" style="margin-top:14px">Bars show cumulative accuracy over every answer recorded; the small number is how many answers it is based on.</p>'+
     '</div>'+
     '<h2 class="section-title">Recent sessions</h2>'+
